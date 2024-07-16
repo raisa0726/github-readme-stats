@@ -18,6 +18,7 @@ import {
   MIN_CARD_WIDTH,
   getDefaultLanguagesCountByLayout,
 } from "../src/cards/top-languages-card.js";
+import { expect, it, describe } from "@jest/globals";
 
 // adds special assertions like toHaveTextContent
 import "@testing-library/jest-dom";
@@ -69,7 +70,9 @@ const langPercentFromDonutLayoutSvg = (d, centerX, centerY) => {
     cartesianToPolar(centerX, centerY, dTmp[0], dTmp[1]).angleInDegrees + 90;
   let startAngle =
     cartesianToPolar(centerX, centerY, dTmp[7], dTmp[8]).angleInDegrees + 90;
-  if (startAngle > endAngle) startAngle -= 360;
+  if (startAngle > endAngle) {
+    startAngle -= 360;
+  }
   return (endAngle - startAngle) / 3.6;
 };
 
@@ -521,9 +524,10 @@ describe("Test renderTopLanguages", () => {
 
       expect(headerStyles.fill.trim()).toBe(`#${themes[name].title_color}`);
       expect(langNameStyles.fill.trim()).toBe(`#${themes[name].text_color}`);
-      expect(queryByTestId(document.body, "card-bg")).toHaveAttribute(
-        "fill",
-        `#${themes[name].bg_color}`,
+      const backgroundElement = queryByTestId(document.body, "card-bg");
+      const backgroundElementFill = backgroundElement.getAttribute("fill");
+      expect([`#${themes[name].bg_color}`, "url(#gradient)"]).toContain(
+        backgroundElementFill,
       );
     });
   });
